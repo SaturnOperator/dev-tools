@@ -35,10 +35,6 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-# Print hashes
-echo "$file1: $hash1"
-echo "$file2: $hash2"
-
 # Compare hashes and set output
 if [ "$hash1" == "$hash2" ]; then
     bg_color="\033[42m" # Green bg
@@ -59,7 +55,17 @@ if [ $spaces -lt 0 ]; then
     spaces=0
 fi
 
+# Show results
 printf "${bg_color}%*s %s %*s\033[0m\n" $spaces "" "$text" $spaces ""
+
+# Print hashes
+max_length=${#file1}
+if [ ${#file2} -gt $max_length ]; then
+    max_length=${#file2}
+fi
+padding=$((max_length + 1))
+printf "  \033[1;36m%-*s\033[0m %s\n" $padding "$file1" "$hash1"
+printf "  \033[1;36m%-*s\033[0m %s\n" $padding "$file2" "$hash2"
 
 # Return error code
 exit $exit_code
